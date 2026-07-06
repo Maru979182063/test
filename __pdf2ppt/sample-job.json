@@ -1,0 +1,55 @@
+{
+  "jobName": "demo-lesson",
+  "outputDir": "./out/demo-lesson",
+  "provider": {
+    "type": "ark",
+    "apiKey": "",
+    "baseUrl": "https://ark.cn-beijing.volces.com/api/v3",
+    "model": "doubao-seed-1-8-251228",
+    "apiStyle": "auto",
+    "imageDetail": "high",
+    "maxImageSidePx": 2048,
+    "maxOutputTokens": 4096
+  },
+  "inputs": {
+    "pageImagesDir": "./sample-input/pages",
+    "logoPath": ""
+  },
+  "pipeline": {
+    "render": {
+      "mode": "page-images",
+      "dpi": 220,
+      "firstPage": 1,
+      "maxPages": 0,
+      "binaryPath": ""
+    },
+    "detectBlocks": {
+      "mode": "ark",
+      "confidenceThreshold": 0.8
+    },
+    "planSlides": {
+      "mode": "ark",
+      "maxBlocksPerSlide": 1
+    },
+    "crop": {
+      "mode": "page-images",
+      "bleedPx": 16
+    },
+    "buildPpt": {
+      "fileName": "demo-lesson.pptx"
+    }
+  },
+  "slide": {
+    "widthInch": 10,
+    "heightInch": 7.5,
+    "marginInch": 0.35,
+    "backgroundColor": "FFFFFF",
+    "showAutoTitle": true
+  },
+  "branding": {
+    "logoWidthInch": 0.9,
+    "logoHeightInch": 0.28,
+    "marginTopInch": 0.2,
+    "marginRightInch": 0.2
+  }
+}
