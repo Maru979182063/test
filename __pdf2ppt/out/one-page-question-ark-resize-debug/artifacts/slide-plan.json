@@ -24,15 +24,15 @@
           "blockId": "slide-001-group-01",
           "pageNumber": 1,
           "bbox": [
-            80,
+            92,
             145,
-            1078,
-            672
+            1025,
+            785
           ],
           "groupBlockIds": [
             "p001-b01"
           ],
-          "groupHint": "ex-03",
+          "groupHint": "exercise-03",
           "dominantType": "practice_question",
           "bboxFormat": "xywh_pixel_top_left",
           "pageSize": [
@@ -60,15 +60,15 @@
           "blockId": "slide-002-group-01",
           "pageNumber": 1,
           "bbox": [
-            80,
-            693,
-            1078,
-            138
+            92,
+            1155,
+            1025,
+            162
           ],
           "groupBlockIds": [
             "p001-b02"
           ],
-          "groupHint": "ex-04",
+          "groupHint": "exercise-04",
           "dominantType": "practice_question",
           "bboxFormat": "xywh_pixel_top_left",
           "pageSize": [

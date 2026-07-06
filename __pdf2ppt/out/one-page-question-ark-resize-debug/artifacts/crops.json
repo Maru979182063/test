@@ -13,28 +13,28 @@
         1638
       ],
       "widthPx": 1158,
-      "heightPx": 704,
+      "heightPx": 817,
       "rawBbox": [
-        80,
+        92,
         145,
-        1078,
-        672
+        1025,
+        785
       ],
       "expandedBbox": [
-        64,
+        76,
         129,
-        1094,
-        704
+        1057,
+        817
       ],
       "finalCropBbox": [
         0,
         129,
         1158,
-        704
+        817
       ],
       "cropSize": [
         1158,
-        704
+        817
       ],
       "modelBbox": null,
       "parentCropBbox": null,
@@ -55,28 +55,28 @@
         1638
       ],
       "widthPx": 1158,
-      "heightPx": 170,
+      "heightPx": 194,
       "rawBbox": [
-        80,
-        693,
-        1078,
-        138
+        92,
+        1155,
+        1025,
+        162
       ],
       "expandedBbox": [
-        64,
-        677,
-        1094,
-        170
+        76,
+        1139,
+        1057,
+        194
       ],
       "finalCropBbox": [
         0,
-        677,
+        1139,
         1158,
-        170
+        194
       ],
       "cropSize": [
         1158,
-        170
+        194
       ],
       "modelBbox": null,
       "parentCropBbox": null,

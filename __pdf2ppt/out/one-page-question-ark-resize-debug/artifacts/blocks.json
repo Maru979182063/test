@@ -20,18 +20,18 @@
       "pageNumber": 1,
       "type": "practice_question",
       "bbox": [
-        80,
+        92,
         145,
-        1078,
-        672
+        1025,
+        785
       ],
       "bboxFormat": "xywh_pixel_top_left",
       "coordinateSpace": "original_page_image",
       "modelBbox": [
-        80,
+        92,
         145,
-        1078,
-        672
+        1025,
+        785
       ],
       "modelCoordinateSpace": "model_input_image",
       "imageMeta": {
@@ -63,12 +63,15 @@
       "textHint": "练习3：判断能说明力可以改变物体运动状态的事例",
       "pageRole": "exercise",
       "keepFullPageWidth": true,
-      "groupHint": "ex-03",
+      "groupHint": "exercise-03",
       "sourceStage": "direct",
       "validation": {
         "warnings": [],
         "errors": []
       },
+      "postProcessNotes": [
+        "snapped-to-content-band"
+      ],
       "pageSize": [
         1158,
         1638
@@ -79,18 +82,18 @@
       "pageNumber": 1,
       "type": "practice_question",
       "bbox": [
-        80,
-        693,
-        1078,
-        138
+        92,
+        1155,
+        1025,
+        162
       ],
       "bboxFormat": "xywh_pixel_top_left",
       "coordinateSpace": "original_page_image",
       "modelBbox": [
-        80,
-        693,
-        1078,
-        138
+        92,
+        1155,
+        1025,
+        162
       ],
       "modelCoordinateSpace": "model_input_image",
       "imageMeta": {
@@ -122,12 +125,17 @@
       "textHint": "练习4：判断足球运动中不属于力改变物体运动状态的选项",
       "pageRole": "exercise",
       "keepFullPageWidth": true,
-      "groupHint": "ex-04",
-      "sourceStage": "direct",
+      "groupHint": "exercise-04",
+      "sourceStage": "recovered",
       "validation": {
         "warnings": [],
         "errors": []
       },
+      "postProcessNotes": [
+        "snapped-to-content-band",
+        "recovered-to-trailing-content-band"
+      ],
+      "recoveredFromBands": true,
       "pageSize": [
         1158,
         1638

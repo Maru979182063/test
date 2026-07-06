@@ -9,6 +9,7 @@ import {
   overlapRatio,
   unionBboxes,
   validateXYWH,
+  xOverlapRatio,
 } from '../lib/geometry.mjs';
 import {
   buildBlockImageMeta,
@@ -105,16 +106,21 @@ export async function detectBlocksWithArk({ config, pageManifest, promptPath, di
       imagePixelLimit,
       pageRole: json.pageRole,
     });
+    const repairedPageBlocks = await repairExercisePageBlocks({
+      blocks: pageBlocks,
+      page,
+      imagePath: page.imagePath,
+    });
 
     await writePass1DebugArtifacts({
       config,
       dirs,
       page,
       pageImage,
-      blocks: pageBlocks,
+      blocks: repairedPageBlocks,
     });
 
-    blocks.push(...pageBlocks);
+    blocks.push(...repairedPageBlocks);
   }
 
   return blocks;
@@ -754,6 +760,56 @@ function normalizeDetectedBlock({
   };
 }
 
+async function repairExercisePageBlocks({ blocks, page, imagePath }) {
+  if (!Array.isArray(blocks) || blocks.length <= 1) {
+    return blocks;
+  }
+  const pageRole = blocks[0]?.pageRole || '';
+  if (pageRole !== 'exercise' && pageRole !== 'mixed') {
+    return blocks;
+  }
+
+  const sorted = [...blocks].sort((a, b) => a.bbox[1] - b.bbox[1] || a.readingOrder - b.readingOrder);
+  const bands = await extractContentBands(imagePath);
+  const repaired = [];
+
+  for (const block of sorted) {
+    repaired.push({
+      ...snapQuestionBlockToBand(block, bands),
+      _originalBbox: block.bbox,
+    });
+  }
+
+  const normalized = [];
+  for (const current of repaired) {
+    const previous = normalized[normalized.length - 1];
+    if (!previous) {
+      normalized.push(current);
+      continue;
+    }
+
+    if (shouldRecoverOverlappingQuestion(previous, current, page)) {
+      const recovered = recoverTrailingQuestionBlock(current, previous, bands, page);
+      if (recovered) {
+        normalized.push(recovered);
+        continue;
+      }
+    }
+
+    if (shouldMergeOverlappingQuestion(previous, current, page)) {
+      normalized[normalized.length - 1] = mergeExerciseBlocks(previous, current);
+      continue;
+    }
+
+    normalized.push(current);
+  }
+
+  return normalized.map((block) => {
+    const { _originalBbox, ...rest } = block;
+    return rest;
+  });
+}
+
 async function writePass1DebugArtifacts({ config, dirs, page, pageImage, blocks }) {
   if (!config.debug?.enabled || !config.debug?.writeModelInputCopies) {
     return;
@@ -1008,6 +1064,119 @@ function withRefineStatus(block, refineAttempted, refineRejected, rejectReasons)
   };
 }
 
+function snapQuestionBlockToBand(block, bands) {
+  if (!isQuestionLike(block) || !Array.isArray(bands) || !bands.length) {
+    return block;
+  }
+
+  const box = parseBboxXYWH(block.bbox, `snap ${block.id}`);
+  const band = bands.find(([start, end]) => end >= box.y && start <= box.y + box.height);
+  if (!band) {
+    return block;
+  }
+
+  const [bandTop, bandBottom] = band;
+  const bandHeight = bandBottom - bandTop + 1;
+  if (bandHeight <= box.height * 1.12) {
+    return block;
+  }
+
+  const snappedBox = [box.x, bandTop, box.width, bandHeight];
+  return {
+    ...block,
+    bbox: snappedBox,
+    modelBbox: mapSourceBoxToModelSpace(snappedBox, block.imageMeta),
+    postProcessNotes: [...(block.postProcessNotes || []), 'snapped-to-content-band'],
+  };
+}
+
+function shouldRecoverOverlappingQuestion(previous, current, page) {
+  if (!isQuestionLike(previous) || !isQuestionLike(current)) {
+    return false;
+  }
+  const prevOrder = inferQuestionOrder(previous);
+  const currentOrder = inferQuestionOrder(current);
+  if (prevOrder === null || currentOrder === null || currentOrder <= prevOrder) {
+    return false;
+  }
+
+  const previousSourceBbox = previous._originalBbox || previous.bbox;
+  const currentSourceBbox = current._originalBbox || current.bbox;
+  const overlapPx = verticalOverlapPx(previousSourceBbox, currentSourceBbox);
+  const xOverlap = xOverlapRatio(previous.bbox, current.bbox);
+  const currentHeightRatio = currentSourceBbox[3] / Math.max(1, page.heightPx);
+  return overlapPx >= 24 && xOverlap >= 0.82 && currentHeightRatio < 0.2;
+}
+
+function recoverTrailingQuestionBlock(block, previous, bands, page) {
+  const previousBottom = previous.bbox[1] + previous.bbox[3];
+  const trailingBands = bands.filter(([start]) => start >= previousBottom + 40);
+  if (!trailingBands.length) {
+    return null;
+  }
+
+  let startIndex = 0;
+  if (
+    trailingBands.length >= 2 &&
+    trailingBands[0][1] - trailingBands[0][0] + 1 < 120 &&
+    trailingBands[1][0] - trailingBands[0][1] > 40
+  ) {
+    startIndex = 1;
+  }
+
+  const selectedBands = trailingBands.slice(startIndex);
+  if (!selectedBands.length) {
+    return null;
+  }
+
+  const startY = selectedBands[0][0];
+  const endY = selectedBands[selectedBands.length - 1][1];
+  const recoveredBox = [block.bbox[0], startY, block.bbox[2], endY - startY + 1];
+  if (recoveredBox[3] < Math.max(100, page.heightPx * 0.08)) {
+    return null;
+  }
+
+  return {
+    ...block,
+    bbox: recoveredBox,
+    modelBbox: mapSourceBoxToModelSpace(recoveredBox, block.imageMeta),
+    sourceStage: 'recovered',
+    recoveredFromBands: true,
+    postProcessNotes: [...(block.postProcessNotes || []), 'recovered-to-trailing-content-band'],
+  };
+}
+
+function shouldMergeOverlappingQuestion(previous, current, page) {
+  if (!isQuestionLike(previous) || !isQuestionLike(current)) {
+    return false;
+  }
+
+  const previousSourceBbox = previous._originalBbox || previous.bbox;
+  const currentSourceBbox = current._originalBbox || current.bbox;
+  const overlapPx = verticalOverlapPx(previousSourceBbox, currentSourceBbox);
+  const xOverlap = xOverlapRatio(previous.bbox, current.bbox);
+  const thinCurrent = currentSourceBbox[3] / Math.max(1, page.heightPx) < 0.2;
+  return overlapPx >= 24 && xOverlap >= 0.82 && thinCurrent;
+}
+
+function mergeExerciseBlocks(previous, current) {
+  const mergedBbox = unionBboxes([previous.bbox, current.bbox]);
+  const mergedModelBbox = unionBboxes([previous.modelBbox, current.modelBbox]);
+  return {
+    ...previous,
+    bbox: mergedBbox,
+    modelBbox: mergedModelBbox,
+    confidence: Math.max(previous.confidence || 0, current.confidence || 0),
+    textHint: previous.textHint || current.textHint,
+    groupHint: previous.groupHint || current.groupHint,
+    mergedBlockIds: [...(previous.mergedBlockIds || [previous.id]), current.id],
+    postProcessNotes: [
+      ...(previous.postProcessNotes || []),
+      'merged-overlapping-question-block',
+    ],
+  };
+}
+
 function dedupeBlocks(blocks, pageManifest) {
   const pageMap = new Map(pageManifest.pages.map((page) => [page.pageNumber, page]));
   const sorted = [...blocks].sort((a, b) => {
@@ -1052,6 +1221,56 @@ async function cropImageRegionToFile(imagePath, bbox, outPath) {
     validated.height
   );
   await fs.writeFile(outPath, canvas.toBuffer('image/png'));
+}
+
+async function extractContentBands(imagePath) {
+  const imageBuffer = await fs.readFile(imagePath);
+  const image = await loadImage(imageBuffer);
+  const canvas = createCanvas(image.width, image.height);
+  const context = canvas.getContext('2d');
+  context.drawImage(image, 0, 0, image.width, image.height);
+  const data = context.getImageData(0, 0, image.width, image.height).data;
+  const minInk = Math.max(12, Math.floor(image.width * 0.015));
+  const bands = [];
+  let start = null;
+  let gap = 0;
+
+  for (let y = 0; y < image.height; y += 1) {
+    let ink = 0;
+    for (let x = 0; x < image.width; x += 1) {
+      const offset = (y * image.width + x) * 4;
+      const r = data[offset];
+      const g = data[offset + 1];
+      const b = data[offset + 2];
+      const a = data[offset + 3];
+      if (a > 0 && (r < 245 || g < 245 || b < 245)) {
+        ink += 1;
+      }
+    }
+
+    if (ink >= minInk) {
+      if (start === null) {
+        start = y;
+      }
+      gap = 0;
+      continue;
+    }
+
+    if (start !== null) {
+      gap += 1;
+      if (gap > 24) {
+        bands.push([start, y - gap]);
+        start = null;
+        gap = 0;
+      }
+    }
+  }
+
+  if (start !== null) {
+    bands.push([start, image.height - 1]);
+  }
+
+  return bands;
 }
 
 function extractResponseText(payload) {
@@ -1210,6 +1429,46 @@ function normalizeExternalPageRole(pageRole) {
   };
 
   return aliasMap[value] || 'mixed';
+}
+
+function isQuestionLike(block) {
+  return QUESTION_TYPES.has(block?.type);
+}
+
+function inferQuestionOrder(block) {
+  const candidates = [block?.groupHint, block?.textHint, block?.id];
+  for (const candidate of candidates) {
+    const text = String(candidate || '');
+    const match =
+      text.match(/(?:ex|q|question)[-_ ]?0*(\d{1,3})/i) ||
+      text.match(/(?:练习|例题|题)\s*0*(\d{1,3})/i);
+    if (match) {
+      return Number(match[1]);
+    }
+  }
+  return null;
+}
+
+function verticalOverlapPx(a, b) {
+  const top = Math.max(a[1], b[1]);
+  const bottom = Math.min(a[1] + a[3], b[1] + b[3]);
+  return Math.max(0, bottom - top);
+}
+
+function mapSourceBoxToModelSpace(box, imageMeta) {
+  const inputSize = imageMeta?.modelInputSize || imageMeta?.originalPageSize;
+  const originalSize = imageMeta?.originalPageSize || inputSize;
+  if (!Array.isArray(inputSize) || !Array.isArray(originalSize)) {
+    return box;
+  }
+  const [inputW, inputH] = inputSize;
+  const [originalW, originalH] = originalSize;
+  return [
+    Math.round((box[0] * inputW) / originalW),
+    Math.round((box[1] * inputH) / originalH),
+    Math.round((box[2] * inputW) / originalW),
+    Math.round((box[3] * inputH) / originalH),
+  ];
 }
 
 function parseBboxTagPayload(text) {

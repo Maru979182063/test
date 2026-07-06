@@ -7,10 +7,10 @@
       "id": "p001-b01",
       "type": "practice_question",
       "bbox": [
-        80,
-        145,
-        1078,
-        672
+        92,
+        147,
+        1025,
+        648
       ],
       "confidence": 0.99,
       "readingOrder": 1,
@@ -18,17 +18,17 @@
       "textHint": "练习3：判断能说明力可以改变物体运动状态的事例",
       "pageRole": "exercise",
       "keepFullPageWidth": true,
-      "groupHint": "ex-03",
+      "groupHint": "exercise-03",
       "bboxFormat": "xywh_pixel_top_left"
     },
     {
       "id": "p001-b02",
       "type": "practice_question",
       "bbox": [
-        80,
-        693,
-        1078,
-        138
+        92,
+        697,
+        1025,
+        278
       ],
       "confidence": 0.99,
       "readingOrder": 2,
@@ -36,7 +36,7 @@
       "textHint": "练习4：判断足球运动中不属于力改变物体运动状态的选项",
       "pageRole": "exercise",
       "keepFullPageWidth": true,
-      "groupHint": "ex-04",
+      "groupHint": "exercise-04",
       "bboxFormat": "xywh_pixel_top_left"
     }
   ]

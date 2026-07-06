@@ -15,18 +15,18 @@
       "id": "p001-b01",
       "type": "practice_question",
       "bbox": [
-        80,
+        92,
         145,
-        1078,
-        672
+        1025,
+        785
       ],
       "bboxFormat": "xywh_pixel_top_left",
       "coordinateSpace": "original_page_image",
       "modelBbox": [
-        80,
+        92,
         145,
-        1078,
-        672
+        1025,
+        785
       ],
       "modelCoordinateSpace": "model_input_image",
       "imageMeta": {
@@ -68,18 +68,18 @@
       "id": "p001-b02",
       "type": "practice_question",
       "bbox": [
-        80,
-        693,
-        1078,
-        138
+        92,
+        1155,
+        1025,
+        162
       ],
       "bboxFormat": "xywh_pixel_top_left",
       "coordinateSpace": "original_page_image",
       "modelBbox": [
-        80,
-        693,
-        1078,
-        138
+        92,
+        1155,
+        1025,
+        162
       ],
       "modelCoordinateSpace": "model_input_image",
       "imageMeta": {

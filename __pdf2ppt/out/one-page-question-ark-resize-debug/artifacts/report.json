@@ -59,16 +59,16 @@
           "id": "p001-b01",
           "type": "practice_question",
           "modelBbox": [
-            80,
+            92,
             145,
-            1078,
-            672
+            1025,
+            785
           ],
           "mappedPageBbox": [
-            80,
+            92,
             145,
-            1078,
-            672
+            1025,
+            785
           ],
           "validation": {
             "warnings": [],
@@ -82,16 +82,16 @@
           "id": "p001-b02",
           "type": "practice_question",
           "modelBbox": [
-            80,
-            693,
-            1078,
-            138
+            92,
+            1155,
+            1025,
+            162
           ],
           "mappedPageBbox": [
-            80,
-            693,
-            1078,
-            138
+            92,
+            1155,
+            1025,
+            162
           ],
           "validation": {
             "warnings": [],
@@ -109,26 +109,26 @@
       "slideId": "slide-001",
       "blockId": "slide-001-group-01",
       "rawBbox": [
-        80,
+        92,
         145,
-        1078,
-        672
+        1025,
+        785
       ],
       "expandedBbox": [
-        64,
+        76,
         129,
-        1094,
-        704
+        1057,
+        817
       ],
       "finalCropBbox": [
         0,
         129,
         1158,
-        704
+        817
       ],
       "cropSize": [
         1158,
-        704
+        817
       ],
       "refineAttempted": false,
       "refineRejected": false,
@@ -138,26 +138,26 @@
       "slideId": "slide-002",
       "blockId": "slide-002-group-01",
       "rawBbox": [
-        80,
-        693,
-        1078,
-        138
+        92,
+        1155,
+        1025,
+        162
       ],
       "expandedBbox": [
-        64,
-        677,
-        1094,
-        170
+        76,
+        1139,
+        1057,
+        194
       ],
       "finalCropBbox": [
         0,
-        677,
+        1139,
         1158,
-        170
+        194
       ],
       "cropSize": [
         1158,
-        170
+        194
       ],
       "refineAttempted": false,
       "refineRejected": false,
