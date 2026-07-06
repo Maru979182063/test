@@ -1,0 +1,90 @@
+{
+  "mode": "page-images",
+  "bboxFormat": "xywh_pixel_top_left",
+  "crops": [
+    {
+      "slideId": "slide-001",
+      "blockId": "slide-001-group-01",
+      "pageNumber": 1,
+      "cropPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\crops\\slide-001__slide-001-group-01.png",
+      "bboxFormat": "xywh_pixel_top_left",
+      "pageSize": [
+        1158,
+        1638
+      ],
+      "widthPx": 1158,
+      "heightPx": 704,
+      "rawBbox": [
+        80,
+        145,
+        1078,
+        672
+      ],
+      "expandedBbox": [
+        64,
+        129,
+        1094,
+        704
+      ],
+      "finalCropBbox": [
+        0,
+        129,
+        1158,
+        704
+      ],
+      "cropSize": [
+        1158,
+        704
+      ],
+      "modelBbox": null,
+      "parentCropBbox": null,
+      "refineModelBbox": null,
+      "refineAttempted": false,
+      "refineRejected": false,
+      "refineRejectReasons": [],
+      "targetBoxEmu": null
+    },
+    {
+      "slideId": "slide-002",
+      "blockId": "slide-002-group-01",
+      "pageNumber": 1,
+      "cropPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\crops\\slide-002__slide-002-group-01.png",
+      "bboxFormat": "xywh_pixel_top_left",
+      "pageSize": [
+        1158,
+        1638
+      ],
+      "widthPx": 1158,
+      "heightPx": 170,
+      "rawBbox": [
+        80,
+        693,
+        1078,
+        138
+      ],
+      "expandedBbox": [
+        64,
+        677,
+        1094,
+        170
+      ],
+      "finalCropBbox": [
+        0,
+        677,
+        1158,
+        170
+      ],
+      "cropSize": [
+        1158,
+        170
+      ],
+      "modelBbox": null,
+      "parentCropBbox": null,
+      "refineModelBbox": null,
+      "refineAttempted": false,
+      "refineRejected": false,
+      "refineRejectReasons": [],
+      "targetBoxEmu": null
+    }
+  ]
+}

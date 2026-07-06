@@ -3,9 +3,17 @@ import path from 'node:path';
 import { createCanvas, loadImage } from '@napi-rs/canvas';
 import { ensureDir, writeJson } from '../lib/fs-utils.mjs';
 
-export async function validateOutput({ config, dirs, slidePlan, cropManifest, pptResult }) {
+export async function validateOutput({
+  config,
+  dirs,
+  pageManifest,
+  blockManifest,
+  slidePlan,
+  cropManifest,
+  pptResult,
+}) {
   if (!config.pipeline.validateOutput?.enabled) {
-    return {
+    const skipped = {
       enabled: false,
       status: 'skipped',
       issueCount: 0,
@@ -15,6 +23,17 @@ export async function validateOutput({ config, dirs, slidePlan, cropManifest, pp
       contactSheetPath: null,
       pptxPath: pptResult.pptxPath,
     };
+    await writePipelineReport({
+      config,
+      dirs,
+      pageManifest,
+      blockManifest,
+      cropManifest,
+      reportStatus: skipped.status,
+      qaReportPath: null,
+      contactSheetPath: null,
+    });
+    return skipped;
   }
 
   const previewDir = await ensureDir(path.join(dirs.debug, 'qa-previews'));
@@ -124,11 +143,145 @@ export async function validateOutput({ config, dirs, slidePlan, cropManifest, pp
   await writeJson(qaReportPath, qa);
   qa.qaReportPath = qaReportPath;
 
+  await writePipelineReport({
+    config,
+    dirs,
+    pageManifest,
+    blockManifest,
+    cropManifest,
+    reportStatus: qa.status,
+    qaReportPath,
+    contactSheetPath,
+  });
+
   if (errorCount > 0 && config.pipeline.validateOutput.failOnError) {
     throw new Error(`QA gate failed with ${errorCount} error issues. See ${qaReportPath}`);
   }
 
   return qa;
+}
+
+async function writePipelineReport({
+  config,
+  dirs,
+  pageManifest,
+  blockManifest,
+  cropManifest,
+  reportStatus,
+  qaReportPath,
+  contactSheetPath,
+}) {
+  const pages = (pageManifest.pages || []).map((page) => {
+    const blocks = (blockManifest.blocks || []).filter((block) => block.pageNumber === page.pageNumber);
+    const firstBlock = blocks[0] || null;
+    const report = {
+      pageNumber: page.pageNumber,
+      imagePath: page.imagePath,
+      originalPageSize: [page.widthPx, page.heightPx],
+      modelInputSize: firstBlock?.imageMeta?.modelInputSize || [page.widthPx, page.heightPx],
+      localResize: firstBlock?.imageMeta?.localResize || {
+        enabled: false,
+        scaleX: 1,
+        scaleY: 1,
+        maxImageSidePx: config.provider.maxImageSidePx || null,
+      },
+      ark: firstBlock?.imageMeta?.ark || {
+        detail: config.provider.imageDetail || 'high',
+        imagePixelLimit: config.provider.imagePixelLimit?.enabled
+          ? config.provider.imagePixelLimit
+          : null,
+      },
+      overlays: {
+        rawModelInputPath: path.join(
+          dirs.debug,
+          `page_${String(page.pageNumber).padStart(3, '0')}_raw_model_input.png`
+        ),
+        overlayOnModelInputPath: path.join(
+          dirs.debug,
+          `page_${String(page.pageNumber).padStart(3, '0')}_overlay_on_model_input.png`
+        ),
+        overlayOnOriginalPagePath: path.join(
+          dirs.debug,
+          `page_${String(page.pageNumber).padStart(3, '0')}_overlay_on_original_page.png`
+        ),
+      },
+      blocks: blocks.map((block) => ({
+        id: block.id,
+        type: block.type,
+        modelBbox: block.modelBbox,
+        mappedPageBbox: block.bbox,
+        validation: block.validation || { warnings: [], errors: [] },
+        refineAttempted: block.refineAttempted || false,
+        refineRejected: block.refineRejected || false,
+        refineRejectReasons: block.refineRejectReasons || [],
+      })),
+    };
+    return report;
+  });
+
+  const report = {
+    status: reportStatus,
+    originalPageSize: pages[0]?.originalPageSize || null,
+    modelInputSize: pages[0]?.modelInputSize || null,
+    localResize: pages[0]?.localResize || null,
+    ark: pages[0]?.ark || null,
+    imagePixelLimitEnabled: Boolean(config.provider.imagePixelLimit?.enabled),
+    cropContactSheetPath: contactSheetPath || path.join(dirs.debug, 'crop_contact_sheet.png'),
+    qaReportPath,
+    pages,
+    crops: (cropManifest.crops || []).map((crop) => ({
+      slideId: crop.slideId,
+      blockId: crop.blockId,
+      rawBbox: crop.rawBbox,
+      expandedBbox: crop.expandedBbox,
+      finalCropBbox: crop.finalCropBbox,
+      cropSize: crop.cropSize,
+      refineAttempted: crop.refineAttempted || false,
+      refineRejected: crop.refineRejected || false,
+      refineRejectReasons: crop.refineRejectReasons || [],
+    })),
+  };
+
+  const reportJsonPath = path.join(dirs.artifacts, 'report.json');
+  await writeJson(reportJsonPath, report);
+  const reportMdPath = path.join(dirs.artifacts, 'report.md');
+  await fs.writeFile(reportMdPath, buildReportMarkdown(report), 'utf8');
+}
+
+function buildReportMarkdown(report) {
+  const page = report.pages[0];
+  const firstBlock = page?.blocks?.[0];
+  const refineRejectedCount = report.pages.reduce(
+    (count, item) => count + item.blocks.filter((block) => block.refineRejected).length,
+    0
+  );
+  const diagnosis = [];
+  if (firstBlock?.validation?.errors?.length) {
+    diagnosis.push('- overlay_on_original_page is likely wrong because mapped page bbox validation already failed.');
+  } else {
+    diagnosis.push('- If overlay_on_model_input is wrong, the prompt or raw model output is likely wrong.');
+    diagnosis.push('- If overlay_on_model_input looks right but overlay_on_original_page is wrong, the resize mapping is likely wrong.');
+    diagnosis.push('- If overlay_on_original_page looks right but the crop looks wrong, the crop stage is likely wrong.');
+    diagnosis.push('- If crops look right but the PPT is wrong, the PPT layout stage is likely wrong.');
+  }
+  if (refineRejectedCount > 0) {
+    diagnosis.push('- Multiple refine rejections mean the second-pass refine strategy is degrading semantics and falling back to coarse blocks.');
+  }
+
+  return [
+    '# Pipeline Report',
+    '',
+    `- status: ${report.status}`,
+    `- originalPageSize: ${JSON.stringify(report.originalPageSize)}`,
+    `- modelInputSize: ${JSON.stringify(report.modelInputSize)}`,
+    `- localResize: ${JSON.stringify(report.localResize)}`,
+    `- ark: ${JSON.stringify(report.ark)}`,
+    `- imagePixelLimitEnabled: ${report.imagePixelLimitEnabled}`,
+    `- cropContactSheetPath: ${report.cropContactSheetPath}`,
+    '',
+    '## Diagnosis',
+    ...diagnosis,
+  ].join('\n');
 }
 
 function issue(level, code, message) {

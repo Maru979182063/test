@@ -9,6 +9,13 @@ import {
   verticalGapXYWH,
   xOverlapRatioXYWH,
 } from './bbox.mjs';
+import {
+  mapModelInputBboxToSourceImageBbox,
+  mapRefineBboxToPageBbox,
+  validateXYWH,
+  xywhToXyxy,
+  xyxyToXywh,
+} from './coordinate-space.mjs';
 
 export function bboxArea(bbox) {
   return bboxAreaXYWH(bbox);
@@ -41,3 +48,11 @@ export function xOverlapRatio(a, b) {
 export function verticalGap(a, b) {
   return verticalGapXYWH(a, b);
 }
+
+export {
+  mapModelInputBboxToSourceImageBbox,
+  mapRefineBboxToPageBbox,
+  validateXYWH,
+  xywhToXyxy,
+  xyxyToXywh,
+};

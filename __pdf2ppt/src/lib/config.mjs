@@ -31,6 +31,11 @@ const DEFAULT_PROVIDER = {
   imageDetail: 'high',
   maxImageSidePx: 2048,
   maxOutputTokens: 4096,
+  imagePixelLimit: {
+    enabled: false,
+    mode: 'match_model_input',
+    tolerance: 0.02,
+  },
 };
 
 const DEFAULT_DEBUG = {
@@ -114,6 +119,9 @@ export async function loadJobConfig(configPath) {
         refineConfidenceThreshold: 0.86,
         refineAreaThreshold: 0.18,
         refineMinQuestionHeightRatio: 0.14,
+        refineAreaRatioThreshold: 0.45,
+        refineHeightRatioThreshold: 0.55,
+        forceRefineTypes: [],
         ...(source.pipeline?.detectBlocks || {}),
       },
       planSlides: {

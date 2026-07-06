@@ -1,0 +1,167 @@
+{
+  "status": "failed",
+  "originalPageSize": [
+    1158,
+    1638
+  ],
+  "modelInputSize": [
+    1158,
+    1638
+  ],
+  "localResize": {
+    "enabled": false,
+    "scaleX": 1,
+    "scaleY": 1,
+    "maxImageSidePx": 1800
+  },
+  "ark": {
+    "detail": "high",
+    "imagePixelLimit": {
+      "min_pixels": 1858867,
+      "max_pixels": 1934741
+    }
+  },
+  "imagePixelLimitEnabled": true,
+  "cropContactSheetPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\debug\\qa-contact-sheet.png",
+  "qaReportPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\artifacts\\qa-report.json",
+  "pages": [
+    {
+      "pageNumber": 1,
+      "imagePath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\page-scout\\question-page-06\\page-06.png",
+      "originalPageSize": [
+        1158,
+        1638
+      ],
+      "modelInputSize": [
+        1158,
+        1638
+      ],
+      "localResize": {
+        "enabled": false,
+        "scaleX": 1,
+        "scaleY": 1,
+        "maxImageSidePx": 1800
+      },
+      "ark": {
+        "detail": "high",
+        "imagePixelLimit": {
+          "min_pixels": 1858867,
+          "max_pixels": 1934741
+        }
+      },
+      "overlays": {
+        "rawModelInputPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\debug\\page_001_raw_model_input.png",
+        "overlayOnModelInputPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\debug\\page_001_overlay_on_model_input.png",
+        "overlayOnOriginalPagePath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\debug\\page_001_overlay_on_original_page.png"
+      },
+      "blocks": [
+        {
+          "id": "p001-b01",
+          "type": "practice_question",
+          "modelBbox": [
+            80,
+            145,
+            1078,
+            672
+          ],
+          "mappedPageBbox": [
+            80,
+            145,
+            1078,
+            672
+          ],
+          "validation": {
+            "warnings": [],
+            "errors": []
+          },
+          "refineAttempted": false,
+          "refineRejected": false,
+          "refineRejectReasons": []
+        },
+        {
+          "id": "p001-b02",
+          "type": "practice_question",
+          "modelBbox": [
+            80,
+            693,
+            1078,
+            138
+          ],
+          "mappedPageBbox": [
+            80,
+            693,
+            1078,
+            138
+          ],
+          "validation": {
+            "warnings": [],
+            "errors": []
+          },
+          "refineAttempted": false,
+          "refineRejected": false,
+          "refineRejectReasons": []
+        }
+      ]
+    }
+  ],
+  "crops": [
+    {
+      "slideId": "slide-001",
+      "blockId": "slide-001-group-01",
+      "rawBbox": [
+        80,
+        145,
+        1078,
+        672
+      ],
+      "expandedBbox": [
+        64,
+        129,
+        1094,
+        704
+      ],
+      "finalCropBbox": [
+        0,
+        129,
+        1158,
+        704
+      ],
+      "cropSize": [
+        1158,
+        704
+      ],
+      "refineAttempted": false,
+      "refineRejected": false,
+      "refineRejectReasons": []
+    },
+    {
+      "slideId": "slide-002",
+      "blockId": "slide-002-group-01",
+      "rawBbox": [
+        80,
+        693,
+        1078,
+        138
+      ],
+      "expandedBbox": [
+        64,
+        677,
+        1094,
+        170
+      ],
+      "finalCropBbox": [
+        0,
+        677,
+        1158,
+        170
+      ],
+      "cropSize": [
+        1158,
+        170
+      ],
+      "refineAttempted": false,
+      "refineRejected": false,
+      "refineRejectReasons": []
+    }
+  ]
+}

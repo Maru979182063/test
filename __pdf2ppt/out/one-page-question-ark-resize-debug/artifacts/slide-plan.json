@@ -1,0 +1,98 @@
+{
+  "mode": "grouped-rules",
+  "promptTemplate": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\prompts\\slide-planner.md",
+  "sourceSlideSizeEmu": null,
+  "templateDecoration": null,
+  "slides": [
+    {
+      "slideId": "slide-001",
+      "slideIndex": 1,
+      "slideType": "practice_question",
+      "pageRole": "exercise",
+      "title": "强化训练 路 练习3：判断能说明力可以改变物体运动状态的事例",
+      "sourcePages": [
+        1
+      ],
+      "textLines": [],
+      "needsReview": true,
+      "reviewReasons": [
+        "tall-group"
+      ],
+      "placements": [
+        {
+          "placementId": "slide-001-grp-01",
+          "blockId": "slide-001-group-01",
+          "pageNumber": 1,
+          "bbox": [
+            80,
+            145,
+            1078,
+            672
+          ],
+          "groupBlockIds": [
+            "p001-b01"
+          ],
+          "groupHint": "ex-03",
+          "dominantType": "practice_question",
+          "bboxFormat": "xywh_pixel_top_left",
+          "pageSize": [
+            1158,
+            1638
+          ]
+        }
+      ]
+    },
+    {
+      "slideId": "slide-002",
+      "slideIndex": 2,
+      "slideType": "practice_question",
+      "pageRole": "exercise",
+      "title": "强化训练 路 练习4：判断足球运动中不属于力改变物体运动状态的选项",
+      "sourcePages": [
+        1
+      ],
+      "textLines": [],
+      "needsReview": false,
+      "reviewReasons": [],
+      "placements": [
+        {
+          "placementId": "slide-002-grp-01",
+          "blockId": "slide-002-group-01",
+          "pageNumber": 1,
+          "bbox": [
+            80,
+            693,
+            1078,
+            138
+          ],
+          "groupBlockIds": [
+            "p001-b02"
+          ],
+          "groupHint": "ex-04",
+          "dominantType": "practice_question",
+          "bboxFormat": "xywh_pixel_top_left",
+          "pageSize": [
+            1158,
+            1638
+          ]
+        }
+      ]
+    }
+  ],
+  "reviewQueue": [
+    {
+      "slideId": "slide-001",
+      "slideIndex": 1,
+      "slideType": "practice_question",
+      "reasons": [
+        "tall-group"
+      ],
+      "blockIds": [
+        "p001-b01"
+      ],
+      "sourcePages": [
+        1
+      ]
+    }
+  ]
+}

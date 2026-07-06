@@ -55,8 +55,10 @@ test('mock pipeline runs through pptx and writes debug artifacts', async () => {
   await fs.access(result.pptxPath);
   await fs.access(path.join(config.outputDir, 'debug', 'page_001_raw_model_input.png'));
   await fs.access(path.join(config.outputDir, 'debug', 'page_001_overlay_on_model_input.png'));
+  await fs.access(path.join(config.outputDir, 'debug', 'page_001_overlay_on_original_page.png'));
   await fs.access(path.join(config.outputDir, 'debug', 'page_001_blocks_report.json'));
   await fs.access(path.join(config.outputDir, 'debug', 'crop_contact_sheet.png'));
+  await fs.access(path.join(config.outputDir, 'artifacts', 'report.json'));
 
   const blocks = JSON.parse(
     await fs.readFile(path.join(config.outputDir, 'artifacts', 'blocks.json'), 'utf8')

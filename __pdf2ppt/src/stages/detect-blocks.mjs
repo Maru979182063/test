@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { createCanvas, loadImage } from '@napi-rs/canvas';
 import { mockDetectBlocks } from '../adapters/mock-vision-model.mjs';
 import { BBOX_FORMAT_XYWH, bboxXYWHToArray, validateBboxXYWH } from '../lib/bbox.mjs';
+import { buildBlockImageMeta, readImageSize } from '../lib/coordinate-space.mjs';
 import { validateBlock } from '../lib/contracts.mjs';
 import { readJson } from '../lib/fs-utils.mjs';
 
@@ -118,10 +119,29 @@ function normalizeBlocks(blocks, pageManifest) {
       ...block,
       id: normalizedId,
       bboxFormat: BBOX_FORMAT_XYWH,
+      coordinateSpace: 'original_page_image',
       pageSize: [page.widthPx, page.heightPx],
       bbox: bboxXYWHToArray(
         validateBboxXYWH(block.bbox, [page.widthPx, page.heightPx], `block ${normalizedId}`)
       ),
+      modelBbox: bboxXYWHToArray(
+        validateBboxXYWH(
+          block.modelBbox || block.bbox,
+          block.imageMeta?.modelInputSize || [page.widthPx, page.heightPx],
+          `block ${normalizedId} modelBbox`
+        )
+      ),
+      modelCoordinateSpace: 'model_input_image',
+      imageMeta:
+        block.imageMeta ||
+        buildBlockImageMeta({
+          originalPageSize: [page.widthPx, page.heightPx],
+          modelInputSize: [page.widthPx, page.heightPx],
+          maxImageSidePx: page.widthPx,
+          detail: 'mock',
+          imagePixelLimit: null,
+        }),
+      validation: block.validation || { warnings: [], errors: [] },
     };
     return normalized;
   });
@@ -143,15 +163,21 @@ async function writeDetectDebugArtifacts({ blocks, config, dirs, pageManifest })
     const pageBlocks = blocksByPage.get(page.pageNumber) || [];
     const rawModelInputPath = path.join(
       dirs.debug,
-      `page_${String(page.pageNumber).padStart(3, '0')}_raw_model_input${path.extname(page.imagePath) || '.png'}`
+      `page_${String(page.pageNumber).padStart(3, '0')}_raw_model_input.png`
     );
-    await fs.copyFile(page.imagePath, rawModelInputPath);
+    await writeModelInputCopy(page.imagePath, pageBlocks, rawModelInputPath);
 
-    const overlayPath = path.join(
+    const overlayOnModelInputPath = path.join(
       dirs.debug,
       `page_${String(page.pageNumber).padStart(3, '0')}_overlay_on_model_input.png`
     );
-    await drawOverlay(rawModelInputPath, pageBlocks, overlayPath);
+    await drawOverlay(rawModelInputPath, pageBlocks, overlayOnModelInputPath, 'modelBbox');
+
+    const overlayOnOriginalPagePath = path.join(
+      dirs.debug,
+      `page_${String(page.pageNumber).padStart(3, '0')}_overlay_on_original_page.png`
+    );
+    await drawOverlay(page.imagePath, pageBlocks, overlayOnOriginalPagePath, 'bbox');
 
     const reportPath = path.join(
       dirs.debug,
@@ -164,11 +190,29 @@ async function writeDetectDebugArtifacts({ blocks, config, dirs, pageManifest })
           pageNumber: page.pageNumber,
           imagePath: page.imagePath,
           rawModelInputPath,
-          overlayPath,
+          overlayOnModelInputPath,
+          overlayOnOriginalPagePath,
           pageSize: [page.widthPx, page.heightPx],
           bboxFormat: BBOX_FORMAT_XYWH,
           blockCount: pageBlocks.length,
-          blocks: pageBlocks,
+          blocks: pageBlocks.map((block) => ({
+            id: block.id,
+            type: block.type,
+            bbox: block.bbox,
+            bboxFormat: block.bboxFormat,
+            coordinateSpace: block.coordinateSpace,
+            modelBbox: block.modelBbox,
+            modelCoordinateSpace: block.modelCoordinateSpace,
+            imageMeta: block.imageMeta,
+            validation: block.validation || { warnings: [], errors: [] },
+            refineAttempted: block.refineAttempted || false,
+            refineRejected: block.refineRejected || false,
+            refineRejectReasons: block.refineRejectReasons || [],
+            parentCropBbox: block.parentCropBbox || null,
+            refineInputSize: block.refineInputSize || null,
+            refineSourceSize: block.refineSourceSize || null,
+            refineModelBbox: block.refineModelBbox || null,
+          })),
         },
         null,
         2
@@ -178,7 +222,7 @@ async function writeDetectDebugArtifacts({ blocks, config, dirs, pageManifest })
   }
 }
 
-async function drawOverlay(imagePath, blocks, outputPath) {
+async function drawOverlay(imagePath, blocks, outputPath, bboxKey) {
   const image = await loadImage(imagePath);
   const canvas = createCanvas(image.width, image.height);
   const context = canvas.getContext('2d');
@@ -189,10 +233,31 @@ async function drawOverlay(imagePath, blocks, outputPath) {
   context.lineWidth = 4;
 
   for (const block of blocks) {
-    const [x, y, width, height] = block.bbox;
+    const targetBbox = Array.isArray(block[bboxKey]) ? block[bboxKey] : block.bbox;
+    const [x, y, width, height] = targetBbox;
     context.strokeRect(x, y, width, height);
     context.fillText(`${block.id} ${block.type}`, x, Math.max(24, y - 6));
   }
 
+  await fs.writeFile(outputPath, canvas.toBuffer('image/png'));
+}
+
+async function writeModelInputCopy(pageImagePath, pageBlocks, outputPath) {
+  const candidate = pageBlocks.find((block) => !block.parentCropBbox) || pageBlocks[0];
+  if (!candidate?.imageMeta) {
+    await fs.copyFile(pageImagePath, outputPath);
+    return;
+  }
+
+  const inputSize = readImageSize(candidate.imageMeta, 'input', 'modelInputCopy');
+  const image = await loadImage(pageImagePath);
+  if (image.width === inputSize.width && image.height === inputSize.height) {
+    await fs.copyFile(pageImagePath, outputPath);
+    return;
+  }
+
+  const canvas = createCanvas(inputSize.width, inputSize.height);
+  const context = canvas.getContext('2d');
+  context.drawImage(image, 0, 0, inputSize.width, inputSize.height);
   await fs.writeFile(outputPath, canvas.toBuffer('image/png'));
 }

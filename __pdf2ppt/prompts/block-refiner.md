@@ -11,6 +11,8 @@
 - 坐标使用整数。
 - 必须输出 `"bboxFormat": "xywh_pixel_top_left"`。
 - bbox 固定表示为 `[x, y, width, height]`，不是 `[x0, y0, x1, y1]`。
+- 当前输入图尺寸会在用户消息里单独给出，bbox 必须相对于“当前输入图尺寸”。
+- 不要返回整页坐标，不要返回 0-1000 归一化坐标。
 - 不要输出 markdown 代码块。
 - 如果整张裁图本来就应该作为一个整体，请只返回一个块。
 - 如果局部区域是题库或练习区，优先按“题号、题干、图、选项、结论”这些自然边界切分。
@@ -22,7 +24,7 @@
   "blocks": [
     {
       "id": "optional-string",
-      "type": "title | definition | example | derivation | figure | problem_illustration",
+      "type": "title | definition | example | derivation | figure | problem_illustration | cover | section_divider | overview_map | knowledge_point | example_question | practice_question | advanced_question | table_object | diagram_object | process_object",
       "bbox": [x, y, width, height],
       "bboxFormat": "xywh_pixel_top_left",
       "confidence": 0.0,

@@ -1,0 +1,35 @@
+{
+  "enabled": true,
+  "status": "failed",
+  "issueCount": 2,
+  "errorCount": 1,
+  "issues": [
+    {
+      "slideId": "slide-001",
+      "slideIndex": 1,
+      "slideType": "practice_question",
+      "issues": [
+        {
+          "level": "warn",
+          "code": "upstream-review-flag",
+          "message": "Upstream review reasons: tall-group"
+        }
+      ]
+    },
+    {
+      "slideId": "slide-002",
+      "slideIndex": 2,
+      "slideType": "practice_question",
+      "issues": [
+        {
+          "level": "error",
+          "code": "low-occupancy",
+          "message": "Placed content only covers 0.201 of usable slide area."
+        }
+      ]
+    }
+  ],
+  "previewDir": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\debug\\qa-previews",
+  "contactSheetPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\debug\\qa-contact-sheet.png",
+  "pptxPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\one-page-question-ark-resize-debug.pptx"
+}

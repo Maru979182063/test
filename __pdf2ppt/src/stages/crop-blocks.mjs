@@ -63,6 +63,12 @@ export async function cropBlocks({ config, dirs, pageManifest, blockManifest, sl
         expandedBbox: cropGeometry.expandedBbox,
         finalCropBbox: cropGeometry.finalCropBbox,
         cropSize: [width, height],
+        modelBbox: source.modelBbox || null,
+        parentCropBbox: source.parentCropBbox || null,
+        refineModelBbox: source.refineModelBbox || null,
+        refineAttempted: source.refineAttempted || false,
+        refineRejected: source.refineRejected || false,
+        refineRejectReasons: source.refineRejectReasons || [],
         targetBoxEmu: placement.targetBoxEmu || null,
       });
     }
@@ -93,6 +99,12 @@ function resolvePlacementSource(placement, blockMap) {
   return {
     pageNumber: block.pageNumber,
     bbox: block.bbox,
+    modelBbox: block.modelBbox,
+    parentCropBbox: block.parentCropBbox,
+    refineModelBbox: block.refineModelBbox,
+    refineAttempted: block.refineAttempted,
+    refineRejected: block.refineRejected,
+    refineRejectReasons: block.refineRejectReasons,
   };
 }
 

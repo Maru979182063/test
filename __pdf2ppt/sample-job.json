@@ -9,7 +9,12 @@
     "apiStyle": "auto",
     "imageDetail": "high",
     "maxImageSidePx": 2048,
-    "maxOutputTokens": 4096
+    "maxOutputTokens": 4096,
+    "imagePixelLimit": {
+      "enabled": false,
+      "mode": "match_model_input",
+      "tolerance": 0.02
+    }
   },
   "inputs": {
     "pageImagesDir": "./sample-input/pages"

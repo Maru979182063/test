@@ -1,0 +1,14 @@
+{
+  "jobName": "one-page-question-ark-resize-debug",
+  "outputDir": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug",
+  "pptxPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\one-page-question-ark-resize-debug.pptx",
+  "pageCount": 1,
+  "blockCount": 2,
+  "slideCount": 2,
+  "reviewCount": 1,
+  "qaStatus": "failed",
+  "qaIssueCount": 2,
+  "qaErrorCount": 1,
+  "qaReportPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\artifacts\\qa-report.json",
+  "qaContactSheetPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-resize-debug\\debug\\qa-contact-sheet.png"
+}

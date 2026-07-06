@@ -1,4 +1,5 @@
 import { BBOX_FORMAT_XYWH, validateBboxXYWH } from './bbox.mjs';
+import { readImageSize } from './coordinate-space.mjs';
 
 export const BLOCK_TYPES = [
   'title',
@@ -37,6 +38,10 @@ export function validateBlock(block) {
     throw new Error(`Unsupported bboxFormat for block ${block.id}: ${block.bboxFormat}`);
   }
 
+  if (block.coordinateSpace !== 'original_page_image') {
+    throw new Error(`Unsupported coordinateSpace for block ${block.id}: ${block.coordinateSpace}`);
+  }
+
   if (block.pageRole && !PAGE_ROLES.includes(block.pageRole)) {
     throw new Error(`Unsupported page role: ${block.pageRole}`);
   }
@@ -46,4 +51,17 @@ export function validateBlock(block) {
   }
 
   validateBboxXYWH(block.bbox, block.pageSize, `block ${block.id}`);
+
+  if (!Array.isArray(block.modelBbox) || block.modelBbox.length !== 4) {
+    throw new Error(`Missing modelBbox for block ${block.id}`);
+  }
+  if (!block.imageMeta || typeof block.imageMeta !== 'object') {
+    throw new Error(`Missing imageMeta for block ${block.id}`);
+  }
+  const original = readImageSize(block.imageMeta, 'original', `block ${block.id} imageMeta`);
+  if (original.width !== block.pageSize[0] || original.height !== block.pageSize[1]) {
+    throw new Error(
+      `imageMeta.originalPageSize mismatch for block ${block.id}: expected ${JSON.stringify(block.pageSize)}, got ${JSON.stringify([original.width, original.height])}`
+    );
+  }
 }
