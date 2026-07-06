@@ -1,0 +1,114 @@
+{
+  "mode": "page-images",
+  "bboxFormat": "xywh_pixel_top_left",
+  "crops": [
+    {
+      "slideId": "s001",
+      "blockId": "p001-b01",
+      "pageNumber": 1,
+      "cropPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-mock-log\\crops\\s001__p001-b01.png",
+      "bboxFormat": "xywh_pixel_top_left",
+      "pageSize": [
+        1158,
+        1638
+      ],
+      "widthPx": 1158,
+      "heightPx": 229,
+      "rawBbox": [
+        58,
+        66,
+        1042,
+        197
+      ],
+      "expandedBbox": [
+        42,
+        50,
+        1074,
+        229
+      ],
+      "finalCropBbox": [
+        0,
+        50,
+        1158,
+        229
+      ],
+      "cropSize": [
+        1158,
+        229
+      ],
+      "targetBoxEmu": null
+    },
+    {
+      "slideId": "s002",
+      "blockId": "p001-b02",
+      "pageNumber": 1,
+      "cropPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-mock-log\\crops\\s002__p001-b02.png",
+      "bboxFormat": "xywh_pixel_top_left",
+      "pageSize": [
+        1158,
+        1638
+      ],
+      "widthPx": 1158,
+      "heightPx": 523,
+      "rawBbox": [
+        58,
+        312,
+        1042,
+        491
+      ],
+      "expandedBbox": [
+        42,
+        296,
+        1074,
+        523
+      ],
+      "finalCropBbox": [
+        0,
+        296,
+        1158,
+        523
+      ],
+      "cropSize": [
+        1158,
+        523
+      ],
+      "targetBoxEmu": null
+    },
+    {
+      "slideId": "s003",
+      "blockId": "p001-b03",
+      "pageNumber": 1,
+      "cropPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-mock-log\\crops\\s003__p001-b03.png",
+      "bboxFormat": "xywh_pixel_top_left",
+      "pageSize": [
+        1158,
+        1638
+      ],
+      "widthPx": 1158,
+      "heightPx": 654,
+      "rawBbox": [
+        58,
+        950,
+        1042,
+        622
+      ],
+      "expandedBbox": [
+        42,
+        934,
+        1074,
+        654
+      ],
+      "finalCropBbox": [
+        0,
+        934,
+        1158,
+        654
+      ],
+      "cropSize": [
+        1158,
+        654
+      ],
+      "targetBoxEmu": null
+    }
+  ]
+}

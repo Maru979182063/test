@@ -1,0 +1,77 @@
+{
+  "pageNumber": 1,
+  "imagePath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\page-scout\\question-page-06\\page-06.png",
+  "rawModelInputPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-02-mock-log\\debug\\page_001_raw_model_input.png",
+  "overlayPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-02-mock-log\\debug\\page_001_overlay_on_model_input.png",
+  "pageSize": [
+    1158,
+    1638
+  ],
+  "bboxFormat": "xywh_pixel_top_left",
+  "blockCount": 3,
+  "blocks": [
+    {
+      "id": "p001-b01",
+      "pageNumber": 1,
+      "type": "title",
+      "bbox": [
+        58,
+        66,
+        1042,
+        197
+      ],
+      "confidence": 0.96,
+      "readingOrder": 1,
+      "canSplit": false,
+      "textHint": "lesson title",
+      "groupHint": "page-1-top",
+      "bboxFormat": "xywh_pixel_top_left",
+      "pageSize": [
+        1158,
+        1638
+      ]
+    },
+    {
+      "id": "p001-b02",
+      "pageNumber": 1,
+      "type": "example",
+      "bbox": [
+        58,
+        312,
+        1042,
+        491
+      ],
+      "confidence": 0.88,
+      "readingOrder": 2,
+      "canSplit": false,
+      "textHint": "mid content block",
+      "groupHint": "page-1-mid",
+      "bboxFormat": "xywh_pixel_top_left",
+      "pageSize": [
+        1158,
+        1638
+      ]
+    },
+    {
+      "id": "p001-b03",
+      "pageNumber": 1,
+      "type": "problem_illustration",
+      "bbox": [
+        58,
+        950,
+        1042,
+        622
+      ],
+      "confidence": 0.84,
+      "readingOrder": 3,
+      "canSplit": false,
+      "textHint": "lower content block",
+      "groupHint": "page-1-bottom",
+      "bboxFormat": "xywh_pixel_top_left",
+      "pageSize": [
+        1158,
+        1638
+      ]
+    }
+  ]
+}

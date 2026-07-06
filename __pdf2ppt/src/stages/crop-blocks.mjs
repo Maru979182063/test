@@ -1,7 +1,14 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { createCanvas, loadImage } from '@napi-rs/canvas';
-import { clamp, safeStem } from '../lib/fs-utils.mjs';
+import {
+  BBOX_FORMAT_XYWH,
+  bboxXYWHToArray,
+  expandBboxXYWH,
+  parsePageSize,
+  validateBboxXYWH,
+} from '../lib/bbox.mjs';
+import { safeStem } from '../lib/fs-utils.mjs';
 
 export async function cropBlocks({ config, dirs, pageManifest, blockManifest, slidePlan }) {
   if (config.pipeline.crop.mode !== 'page-images') {
@@ -26,12 +33,15 @@ export async function cropBlocks({ config, dirs, pageManifest, blockManifest, sl
       }
 
       const image = await loadCachedImage(page.imagePath, imageCache);
-      const [x, y, width, height] = normalizeBbox(
+      validatePageImageSize(page, image);
+      const cropGeometry = normalizeBbox(
         source.bbox,
         page,
         bleedPx,
-        preserveFullPageWidth
+        preserveFullPageWidth,
+        config
       );
+      const [x, y, width, height] = cropGeometry.finalCropBbox;
       const canvas = createCanvas(width, height);
       const context = canvas.getContext('2d');
       context.drawImage(image, x, y, width, height, 0, 0, width, height);
@@ -45,16 +55,24 @@ export async function cropBlocks({ config, dirs, pageManifest, blockManifest, sl
         blockId: placement.blockId,
         pageNumber: source.pageNumber,
         cropPath,
+        bboxFormat: BBOX_FORMAT_XYWH,
+        pageSize: [page.widthPx, page.heightPx],
         widthPx: width,
         heightPx: height,
-        sourceBbox: [x, y, width, height],
+        rawBbox: cropGeometry.rawBbox,
+        expandedBbox: cropGeometry.expandedBbox,
+        finalCropBbox: cropGeometry.finalCropBbox,
+        cropSize: [width, height],
         targetBoxEmu: placement.targetBoxEmu || null,
       });
     }
   }
 
+  await writeCropContactSheet(crops, dirs);
+
   return {
     mode: config.pipeline.crop.mode,
+    bboxFormat: BBOX_FORMAT_XYWH,
     crops,
   };
 }
@@ -85,18 +103,99 @@ async function loadCachedImage(imagePath, cache) {
   return cache.get(imagePath);
 }
 
-function normalizeBbox(bbox, page, bleedPx, preserveFullPageWidth) {
-  const [rawX, rawY, rawWidth, rawHeight] = bbox;
-  const x = preserveFullPageWidth
-    ? 0
-    : clamp(Math.floor(rawX - bleedPx), 0, page.widthPx);
-  const y = clamp(Math.floor(rawY - bleedPx), 0, page.heightPx);
-  const right = preserveFullPageWidth
-    ? page.widthPx
-    : clamp(Math.ceil(rawX + rawWidth + bleedPx), 0, page.widthPx);
-  const bottom = clamp(Math.ceil(rawY + rawHeight + bleedPx), 0, page.heightPx);
-  const width = Math.max(1, right - x);
-  const height = Math.max(1, bottom - y);
+function normalizeBbox(bbox, page, bleedPx, preserveFullPageWidth, config) {
+  const pageSize = [page.widthPx, page.heightPx];
+  const raw = validateBboxXYWH(bbox, pageSize, `crop block on page ${page.pageNumber}`);
+  const expanded = expandBboxXYWH(raw, bleedPx, pageSize, `crop block on page ${page.pageNumber}`);
+  const finalCrop = preserveFullPageWidth
+    ? {
+        x: 0,
+        y: expanded.y,
+        width: page.widthPx,
+        height: expanded.height,
+      }
+    : expanded;
 
-  return [x, y, width, height];
+  const finalValidated = validateBboxXYWH(
+    finalCrop,
+    pageSize,
+    `final crop block on page ${page.pageNumber}`
+  );
+
+  if (config.debug?.strictBbox !== false) {
+    if (finalValidated.width <= 0 || finalValidated.height <= 0) {
+      throw new Error(`Invalid final crop bbox after normalization: ${JSON.stringify(finalValidated)}`);
+    }
+  }
+
+  return {
+    rawBbox: bboxXYWHToArray(raw),
+    expandedBbox: bboxXYWHToArray(expanded),
+    finalCropBbox: bboxXYWHToArray(finalValidated),
+  };
+}
+
+function validatePageImageSize(page, image) {
+  const expected = parsePageSize([page.widthPx, page.heightPx], `page ${page.pageNumber} pageSize`);
+  if (image.width !== expected.width || image.height !== expected.height) {
+    throw new Error(
+      `Page image size mismatch on page ${page.pageNumber}: manifest=${JSON.stringify([page.widthPx, page.heightPx])}, actual=${JSON.stringify([image.width, image.height])}`
+    );
+  }
+}
+
+async function writeCropContactSheet(crops, dirs) {
+  if (!crops.length) {
+    return;
+  }
+
+  const thumbs = await Promise.all(
+    crops.map(async (crop) => ({
+      ...crop,
+      image: await loadImage(crop.cropPath),
+    }))
+  );
+
+  const columns = Math.min(3, thumbs.length);
+  const rows = Math.ceil(thumbs.length / columns);
+  const cellWidth = 320;
+  const cellHeight = 220;
+  const gap = 20;
+  const canvas = createCanvas(
+    columns * cellWidth + (columns + 1) * gap,
+    rows * cellHeight + (rows + 1) * gap
+  );
+  const context = canvas.getContext('2d');
+  context.fillStyle = '#f5f5f5';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.font = '16px Microsoft YaHei';
+  context.fillStyle = '#111111';
+
+  for (const [index, crop] of thumbs.entries()) {
+    const col = index % columns;
+    const row = Math.floor(index / columns);
+    const originX = gap + col * (cellWidth + gap);
+    const originY = gap + row * (cellHeight + gap);
+    const fit = contain(crop.image.width, crop.image.height, cellWidth, cellHeight - 28);
+    const x = originX + (cellWidth - fit.width) / 2;
+    const y = originY + 24 + (cellHeight - 28 - fit.height) / 2;
+
+    context.fillText(crop.blockId, originX, originY + 16);
+    context.drawImage(crop.image, x, y, fit.width, fit.height);
+    context.strokeStyle = '#cccccc';
+    context.strokeRect(x, y, fit.width, fit.height);
+  }
+
+  await fs.writeFile(
+    path.join(dirs.debug, 'crop_contact_sheet.png'),
+    canvas.toBuffer('image/png')
+  );
+}
+
+function contain(widthPx, heightPx, maxW, maxH) {
+  const ratio = Math.min(maxW / widthPx, maxH / heightPx);
+  return {
+    width: Math.max(1, Math.round(widthPx * ratio)),
+    height: Math.max(1, Math.round(heightPx * ratio)),
+  };
 }

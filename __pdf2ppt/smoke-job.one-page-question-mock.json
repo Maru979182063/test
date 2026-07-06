@@ -1,0 +1,39 @@
+{
+  "jobName": "one-page-question-mock-log",
+  "outputDir": "./out/one-page-question-mock-log",
+  "debug": {
+    "enabled": true,
+    "strictBbox": true,
+    "writeModelInputCopies": true
+  },
+  "inputs": {
+    "pageImagesDir": "./out/page-scout/question-page-04"
+  },
+  "pipeline": {
+    "render": {
+      "mode": "page-images"
+    },
+    "detectBlocks": {
+      "mode": "mock",
+      "confidenceThreshold": 0.8
+    },
+    "planSlides": {
+      "mode": "mock",
+      "maxBlocksPerSlide": 1
+    },
+    "crop": {
+      "mode": "page-images",
+      "bleedPx": 16,
+      "preserveFullPageWidth": true
+    },
+    "buildPpt": {
+      "fileName": "one-page-question-mock-log.pptx"
+    },
+    "validateOutput": {
+      "enabled": false
+    }
+  },
+  "branding": {
+    "logoPath": ""
+  }
+}

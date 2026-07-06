@@ -6,7 +6,8 @@
   "scripts": {
     "pipeline": "node automation.mjs --config sample-job.json",
     "check:ark": "node check-ark.mjs --config smoke-job.physics.json",
-    "list:ark-models": "node list-ark-models.mjs --config smoke-job.physics.json"
+    "list:ark-models": "node list-ark-models.mjs --config smoke-job.physics.json",
+    "test": "node --test test/*.test.mjs"
   },
   "keywords": [],
   "author": "",

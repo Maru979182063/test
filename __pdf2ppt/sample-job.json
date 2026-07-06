@@ -12,8 +12,7 @@
     "maxOutputTokens": 4096
   },
   "inputs": {
-    "pageImagesDir": "./sample-input/pages",
-    "logoPath": ""
+    "pageImagesDir": "./sample-input/pages"
   },
   "pipeline": {
     "render": {
@@ -47,6 +46,7 @@
     "showAutoTitle": true
   },
   "branding": {
+    "logoPath": "",
     "logoWidthInch": 0.9,
     "logoHeightInch": 0.28,
     "marginTopInch": 0.2,

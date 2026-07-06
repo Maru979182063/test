@@ -1,0 +1,48 @@
+{
+  "mode": "mock",
+  "promptTemplate": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\prompts\\slide-planner.md",
+  "sourceSlideSizeEmu": null,
+  "templateDecoration": null,
+  "slides": [
+    {
+      "slideId": "s001",
+      "title": "Title",
+      "sourcePages": [
+        1
+      ],
+      "placements": [
+        {
+          "blockId": "p001-b01",
+          "placementId": "s001-pl-01"
+        }
+      ]
+    },
+    {
+      "slideId": "s002",
+      "title": "Example",
+      "sourcePages": [
+        1
+      ],
+      "placements": [
+        {
+          "blockId": "p001-b02",
+          "placementId": "s002-pl-01"
+        }
+      ]
+    },
+    {
+      "slideId": "s003",
+      "title": "Problem",
+      "sourcePages": [
+        1
+      ],
+      "placements": [
+        {
+          "blockId": "p001-b03",
+          "placementId": "s003-pl-01"
+        }
+      ]
+    }
+  ],
+  "reviewQueue": []
+}

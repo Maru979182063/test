@@ -1,3 +1,5 @@
+import { BBOX_FORMAT_XYWH, validateBboxXYWH } from './bbox.mjs';
+
 export const BLOCK_TYPES = [
   'title',
   'definition',
@@ -31,11 +33,17 @@ export function validateBlock(block) {
     throw new Error(`Unsupported block type: ${block.type}`);
   }
 
-  if (!Array.isArray(block.bbox) || block.bbox.length !== 4) {
-    throw new Error(`Invalid bbox for block ${block.id}`);
+  if (block.bboxFormat !== BBOX_FORMAT_XYWH) {
+    throw new Error(`Unsupported bboxFormat for block ${block.id}: ${block.bboxFormat}`);
   }
 
   if (block.pageRole && !PAGE_ROLES.includes(block.pageRole)) {
     throw new Error(`Unsupported page role: ${block.pageRole}`);
   }
+
+  if (!Array.isArray(block.pageSize) || block.pageSize.length !== 2) {
+    throw new Error(`Invalid pageSize for block ${block.id}`);
+  }
+
+  validateBboxXYWH(block.bbox, block.pageSize, `block ${block.id}`);
 }

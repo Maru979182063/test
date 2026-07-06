@@ -22,13 +22,15 @@ export async function buildPpt({ config, slidePlan, cropManifest }) {
     cropMap.set(crop.slideId, list);
   }
 
-  const hasLogo = Boolean(config.branding.logoPath);
-  const hasDecoration = Boolean(config.branding.templateDecorationPath);
+  const logoPath = resolveBrandingAssetPath(config, 'logoPath');
+  const templateDecorationPath = resolveBrandingAssetPath(config, 'templateDecorationPath');
+  const hasLogo = Boolean(logoPath);
+  const hasDecoration = Boolean(templateDecorationPath);
   if (hasLogo) {
-    await fs.access(config.branding.logoPath);
+    await fs.access(logoPath);
   }
   if (hasDecoration) {
-    await fs.access(config.branding.templateDecorationPath);
+    await fs.access(templateDecorationPath);
   }
 
   for (const plannedSlide of slidePlan.slides) {
@@ -37,12 +39,12 @@ export async function buildPpt({ config, slidePlan, cropManifest }) {
 
     if (hasDecoration && slidePlan.templateDecoration?.boxEmu) {
       slide.addImage({
-        path: config.branding.templateDecorationPath,
+        path: templateDecorationPath,
         ...emuBoxToInches(slidePlan.templateDecoration.boxEmu),
       });
     } else if (hasDecoration) {
       slide.addImage({
-        path: config.branding.templateDecorationPath,
+        path: templateDecorationPath,
         x:
           config.slide.widthInch -
           config.branding.templateDecorationRightInch -
@@ -68,7 +70,7 @@ export async function buildPpt({ config, slidePlan, cropManifest }) {
 
     if (hasLogo) {
       slide.addImage({
-        path: config.branding.logoPath,
+        path: logoPath,
         x:
           config.slide.widthInch -
           config.branding.marginRightInch -
@@ -111,6 +113,16 @@ export async function buildPpt({ config, slidePlan, cropManifest }) {
   await pptx.writeFile({ fileName: pptxPath });
 
   return { pptxPath };
+}
+
+export function resolveBrandingAssetPath(config, key) {
+  if (config?.branding?.[key]) {
+    return config.branding[key];
+  }
+  if (key === 'logoPath') {
+    return config?.inputs?.logoPath || '';
+  }
+  return '';
 }
 
 function addDerivedText(slide, plannedSlide, crops, config) {

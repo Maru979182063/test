@@ -9,6 +9,8 @@
 规则：
 - bbox 必须相对于当前裁图，而不是整页。
 - 坐标使用整数。
+- 必须输出 `"bboxFormat": "xywh_pixel_top_left"`。
+- bbox 固定表示为 `[x, y, width, height]`，不是 `[x0, y0, x1, y1]`。
 - 不要输出 markdown 代码块。
 - 如果整张裁图本来就应该作为一个整体，请只返回一个块。
 - 如果局部区域是题库或练习区，优先按“题号、题干、图、选项、结论”这些自然边界切分。
@@ -22,6 +24,7 @@
       "id": "optional-string",
       "type": "title | definition | example | derivation | figure | problem_illustration",
       "bbox": [x, y, width, height],
+      "bboxFormat": "xywh_pixel_top_left",
       "confidence": 0.0,
       "readingOrder": 1,
       "canSplit": false,
