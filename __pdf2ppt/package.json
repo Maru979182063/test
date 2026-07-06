@@ -1,0 +1,21 @@
+{
+  "name": "__pdf2ppt",
+  "version": "1.0.0",
+  "description": "Scaffold for PDF page-image to slide automation",
+  "main": "index.js",
+  "scripts": {
+    "pipeline": "node automation.mjs --config sample-job.json",
+    "check:ark": "node check-ark.mjs --config smoke-job.physics.json",
+    "list:ark-models": "node list-ark-models.mjs --config smoke-job.physics.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@napi-rs/canvas": "^0.1.67",
+    "pdf2ppt": "^1.0.4",
+    "pdfjs-dist": "^6.0.227",
+    "pptxgenjs": "^3.12.0"
+  }
+}
