@@ -1,0 +1,55 @@
+{
+  "jobName": "physics-smoke",
+  "outputDir": "./out/physics-smoke",
+  "provider": {
+    "type": "ark",
+    "apiKey": "",
+    "baseUrl": "https://ark.cn-beijing.volces.com/api/v3",
+    "model": "doubao-seed-1-8-251228",
+    "apiStyle": "auto",
+    "imageDetail": "high",
+    "maxImageSidePx": 1800,
+    "maxOutputTokens": 4096
+  },
+  "inputs": {
+    "pdfPath": "C:/Users/EDY/Documents/WXWork/1688857912801359/WeDrive/领世培优/领世一对一物理学科资料/初中物理/01标准化讲义/寒假/01初二寒假标准化讲义/第4讲 力的认识（学生版）.pdf",
+    "logoPath": ""
+  },
+  "pipeline": {
+    "render": {
+      "mode": "pdf-poppler",
+      "dpi": 220,
+      "firstPage": 1,
+      "maxPages": 1,
+      "binaryPath": "C:/Users/EDY/.cache/codex-runtimes/codex-primary-runtime/dependencies/native/poppler/Library/bin/pdftoppm.exe"
+    },
+    "detectBlocks": {
+      "mode": "ark",
+      "confidenceThreshold": 0.8
+    },
+    "planSlides": {
+      "mode": "ark",
+      "maxBlocksPerSlide": 1
+    },
+    "crop": {
+      "mode": "page-images",
+      "bleedPx": 16
+    },
+    "buildPpt": {
+      "fileName": "physics-smoke.pptx"
+    }
+  },
+  "slide": {
+    "widthInch": 10,
+    "heightInch": 7.5,
+    "marginInch": 0.35,
+    "backgroundColor": "FFFFFF",
+    "showAutoTitle": true
+  },
+  "branding": {
+    "logoWidthInch": 0.9,
+    "logoHeightInch": 0.28,
+    "marginTopInch": 0.2,
+    "marginRightInch": 0.2
+  }
+}
