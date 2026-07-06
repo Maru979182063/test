@@ -1,0 +1,6 @@
+__pdf2ppt/node_modules/
+__pdf2ppt/out/
+__pdf2ppt/tmp_pages/
+
+Thumbs.db
+.DS_Store
