@@ -1,0 +1,21 @@
+{
+  "blocks": [
+    {
+      "id": "blk-1",
+      "type": "practice_question",
+      "bbox": [
+        0,
+        0,
+        1068,
+        348
+      ],
+      "confidence": 1,
+      "readingOrder": 1,
+      "canSplit": false,
+      "textHint": "选项C：撑竿被跳高运动员压弯",
+      "pageRole": "exercise",
+      "keepFullPageWidth": true,
+      "groupHint": "q-option-c"
+    }
+  ]
+}

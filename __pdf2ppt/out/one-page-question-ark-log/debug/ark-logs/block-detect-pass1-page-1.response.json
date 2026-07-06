@@ -1,0 +1,41 @@
+{
+  "pageNumber": 1,
+  "pageRole": "exercise",
+  "bboxFormat": "xywh_pixel_top_left",
+  "blocks": [
+    {
+      "id": "p001-b01",
+      "type": "practice_question",
+      "bbox": [
+        80,
+        140,
+        1020,
+        680
+      ],
+      "confidence": 0.98,
+      "readingOrder": 1,
+      "canSplit": false,
+      "textHint": "练习3：能说明力可以改变物体运动状态的事例选择题",
+      "pageRole": "exercise",
+      "keepFullPageWidth": true,
+      "groupHint": "exercise-set-03"
+    },
+    {
+      "id": "p001-b02",
+      "type": "practice_question",
+      "bbox": [
+        80,
+        700,
+        1020,
+        300
+      ],
+      "confidence": 0.98,
+      "readingOrder": 2,
+      "canSplit": false,
+      "textHint": "练习4：足球运动中不属于力改变物体运动状态的选择题",
+      "pageRole": "exercise",
+      "keepFullPageWidth": true,
+      "groupHint": "exercise-set-04"
+    }
+  ]
+}

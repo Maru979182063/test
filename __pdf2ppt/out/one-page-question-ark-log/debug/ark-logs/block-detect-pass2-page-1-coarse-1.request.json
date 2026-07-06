@@ -1,0 +1,15 @@
+{
+  "endpoint": "responses",
+  "model": "doubao-seed-1-8-251228",
+  "systemPrompt": "﻿你正在细化一个已经初步识别出的局部区域。\r\n\r\n目标仍然不是 OCR，也不是切很多碎框。\r\n你的目标是：把这个局部区域细化成“适合直接做一页 PPT 的完整教学对象”。\r\n\r\n允许的 type：\r\n- cover\r\n- section_divider\r\n- overview_map\r\n- knowledge_point\r\n- example_question\r\n- practice_question\r\n- advanced_question\r\n- table_object\r\n- diagram_object\r\n- process_object\r\n\r\n细化规则：\r\n- 优先少切。除非局部区域里明显存在多个完整对象，否则只返回 1 个 block。\r\n- 默认保持对象横向完整，不要做左右碎切。\r\n- 重点判断纵向自然边界。\r\n- 如果是单道题，题号、题干、配图、选项、结论必须保留在一起。\r\n- 对题目类对象，绝对不要只返回题签、题干第一行、选项尾部或残缺半题。\r\n- 如果你不确定题目的下边界，宁可把该题的剩余选项、配图或直接相关留白一起包进去，也不要切短。\r\n- 如果是连续多题区，按题号或自然题组拆分，但每一块都必须是完整题目。\r\n- 如果是完整表格、流程图、思维导图，默认整个对象作为一块。\r\n- 如果小标题只是引出其正下方对象，必须并入该对象。\r\n- 如果拿不准，宁可返回更少、更大的块，也不要切成很多无意义小碎块。\r\n\r\nbbox 规则：\r\n- bbox 必须相对于当前裁图，而不是整页。\r\n- 坐标使用整数。\r\n- 必须输出 `\"bboxFormat\": \"xywh_pixel_top_left\"`。\r\n- bbox 固定表示为 `[x, y, width, height]`，不是 `[x0, y0, x1, y1]`。\r\n- 你输出的块应更像“局部横切带”，而不是很多窄竖框。\r\n\r\n数量预期：\r\n- 大多数局部裁图返回 1 到 3 个 block。\r\n- 只有在局部区域里确实有多个独立题目时，才可以增加到 4 到 6 个 block。\r\n\r\n只返回 JSON，不要输出 markdown 代码块：\r\n{\r\n  \"blocks\": [\r\n    {\r\n      \"id\": \"optional-string\",\r\n      \"pageRole\": \"exercise\",\r\n      \"type\": \"practice_question\",\r\n      \"bbox\": [0, 24, 1980, 720],\r\n      \"bboxFormat\": \"xywh_pixel_top_left\",\r\n      \"confidence\": 0.92,\r\n      \"readingOrder\": 1,\r\n      \"canSplit\": false,\r\n      \"keepFullPageWidth\": true,\r\n      \"textHint\": \"强化训练第1题\",\r\n      \"groupHint\": \"q-01\"\r\n    }\r\n  ]\r\n}\r\n",
+  "userText": "页码：1\n整页尺寸：1158x1638\n当前裁图片区在整页中的左上角坐标：(56, 116)\n当前裁图片区尺寸：1068x728\n第一阶段给出的父块类型：practice_question\n第二阶段：请把这个局部区域细化成适合做 PPT 的教学对象。\n除非局部区域里明显存在多道独立题或多个独立对象，否则优先少切。\n返回的 bbox 必须只相对于当前这张裁图。",
+  "maxOutputTokens": 4096,
+  "imageCount": 1,
+  "imageMeta": [
+    {
+      "detail": "high",
+      "dataUrlPrefix": "data:image/png;base64,iVBORw0KGg",
+      "dataUrlLength": 299090
+    }
+  ]
+}

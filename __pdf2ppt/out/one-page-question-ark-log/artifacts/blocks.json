@@ -1,0 +1,79 @@
+{
+  "mode": "ark-two-pass",
+  "promptTemplate": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\prompts\\profiles\\object-first\\block-detector.md",
+  "bboxFormat": "xywh_pixel_top_left",
+  "pages": [
+    {
+      "pageNumber": 1,
+      "imagePath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\page-scout\\question-page-06\\page-06.png",
+      "widthPx": 1158,
+      "heightPx": 1638,
+      "pageSize": [
+        1158,
+        1638
+      ]
+    }
+  ],
+  "blocks": [
+    {
+      "id": "blk-1",
+      "pageNumber": 1,
+      "type": "practice_question",
+      "bbox": [
+        56,
+        676,
+        1068,
+        348
+      ],
+      "confidence": 1,
+      "readingOrder": 1,
+      "canSplit": false,
+      "textHint": "选项C：撑竿被跳高运动员压弯",
+      "pageRole": "exercise",
+      "keepFullPageWidth": true,
+      "groupHint": "q-option-c",
+      "parentBlockId": "p001-b02",
+      "sourceStage": "refined",
+      "sourceCropPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-log\\debug\\refine-crops\\page-01_coarse-02.png",
+      "bboxFormat": "xywh_pixel_top_left",
+      "pageSize": [
+        1158,
+        1638
+      ]
+    },
+    {
+      "id": "block-1",
+      "pageNumber": 1,
+      "type": "practice_question",
+      "bbox": [
+        56,
+        116,
+        1068,
+        728
+      ],
+      "confidence": 0.95,
+      "readingOrder": 1,
+      "canSplit": false,
+      "textHint": "上一题的D选项及强化训练练习3（题干、A、B选项）",
+      "pageRole": "exercise",
+      "keepFullPageWidth": true,
+      "groupHint": "q-remain-and-q3",
+      "parentBlockId": "p001-b01",
+      "sourceStage": "refined",
+      "sourceCropPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-log\\debug\\refine-crops\\page-01_coarse-01.png",
+      "bboxFormat": "xywh_pixel_top_left",
+      "pageSize": [
+        1158,
+        1638
+      ]
+    }
+  ],
+  "pagesByNumber": {
+    "1": {
+      "pageNumber": 1,
+      "imagePath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\page-scout\\question-page-06\\page-06.png",
+      "widthPx": 1158,
+      "heightPx": 1638
+    }
+  }
+}

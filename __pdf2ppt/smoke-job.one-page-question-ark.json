@@ -1,0 +1,51 @@
+{
+  "jobName": "one-page-question-ark-log",
+  "outputDir": "./out/one-page-question-ark-log",
+  "debug": {
+    "enabled": true,
+    "strictBbox": true,
+    "writeModelInputCopies": true
+  },
+  "provider": {
+    "type": "ark",
+    "apiKey": "",
+    "baseUrl": "https://ark.cn-beijing.volces.com/api/v3",
+    "model": "doubao-seed-1-8-251228",
+    "apiStyle": "auto",
+    "imageDetail": "high",
+    "maxImageSidePx": 1800,
+    "maxOutputTokens": 4096
+  },
+  "inputs": {
+    "pageImagesDir": "./out/page-scout/question-page-06"
+  },
+  "pipeline": {
+    "render": {
+      "mode": "page-images"
+    },
+    "detectBlocks": {
+      "mode": "ark-two-pass",
+      "confidenceThreshold": 0.8,
+      "promptProfile": "object-first",
+      "maxRefinePerPage": 2
+    },
+    "planSlides": {
+      "mode": "ark",
+      "maxBlocksPerSlide": 1
+    },
+    "crop": {
+      "mode": "page-images",
+      "bleedPx": 16,
+      "preserveFullPageWidth": true
+    },
+    "buildPpt": {
+      "fileName": "one-page-question-ark-log.pptx"
+    },
+    "validateOutput": {
+      "enabled": false
+    }
+  },
+  "branding": {
+    "logoPath": ""
+  }
+}

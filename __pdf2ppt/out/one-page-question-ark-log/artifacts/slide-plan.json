@@ -1,0 +1,26 @@
+{
+  "mode": "ark",
+  "promptTemplate": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\prompts\\slide-planner.md",
+  "sourceSlideSizeEmu": null,
+  "templateDecoration": null,
+  "slides": [
+    {
+      "slideId": "s001",
+      "title": "强化训练练习3及上一题剩余选项",
+      "sourcePages": [
+        1
+      ],
+      "placements": [
+        {
+          "blockId": "block-1",
+          "placementId": "s001-pl-01"
+        },
+        {
+          "blockId": "blk-1",
+          "placementId": "s001-pl-02"
+        }
+      ]
+    }
+  ],
+  "reviewQueue": []
+}

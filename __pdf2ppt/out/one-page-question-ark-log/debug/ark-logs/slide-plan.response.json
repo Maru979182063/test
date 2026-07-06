@@ -1,0 +1,20 @@
+{
+  "slides": [
+    {
+      "slideId": "s001",
+      "title": "强化训练练习3及上一题剩余选项",
+      "sourcePages": [
+        1
+      ],
+      "placements": [
+        {
+          "blockId": "block-1"
+        },
+        {
+          "blockId": "blk-1"
+        }
+      ]
+    }
+  ],
+  "reviewQueue": []
+}

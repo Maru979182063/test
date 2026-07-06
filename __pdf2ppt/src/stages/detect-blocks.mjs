@@ -98,6 +98,7 @@ async function resolvePromptPath(profileName, fileName) {
 
 function normalizeBlocks(blocks, pageManifest) {
   const pagesByNumber = new Map(pageManifest.pages.map((page) => [page.pageNumber, page]));
+  const seenIds = new Map();
 
   return (blocks || []).map((block, index) => {
     const page = pagesByNumber.get(block.pageNumber);
@@ -105,13 +106,21 @@ function normalizeBlocks(blocks, pageManifest) {
       throw new Error(`Detected block points to missing pageNumber=${block.pageNumber}`);
     }
 
+    const baseId =
+      block.id ||
+      `p${String(block.pageNumber).padStart(3, '0')}-b${String(index + 1).padStart(2, '0')}`;
+    const occurrence = (seenIds.get(baseId) || 0) + 1;
+    seenIds.set(baseId, occurrence);
+    const normalizedId =
+      occurrence === 1 ? baseId : `${baseId}--dup${String(occurrence).padStart(2, '0')}`;
+
     const normalized = {
       ...block,
-      id: block.id || `p${String(block.pageNumber).padStart(3, '0')}-b${String(index + 1).padStart(2, '0')}`,
+      id: normalizedId,
       bboxFormat: BBOX_FORMAT_XYWH,
       pageSize: [page.widthPx, page.heightPx],
       bbox: bboxXYWHToArray(
-        validateBboxXYWH(block.bbox, [page.widthPx, page.heightPx], `block ${block.id || index + 1}`)
+        validateBboxXYWH(block.bbox, [page.widthPx, page.heightPx], `block ${normalizedId}`)
       ),
     };
     return normalized;

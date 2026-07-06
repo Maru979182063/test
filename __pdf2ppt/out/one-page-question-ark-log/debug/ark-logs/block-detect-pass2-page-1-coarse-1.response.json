@@ -1,0 +1,21 @@
+{
+  "blocks": [
+    {
+      "id": "block-1",
+      "type": "practice_question",
+      "bbox": [
+        0,
+        0,
+        1068,
+        728
+      ],
+      "confidence": 0.95,
+      "readingOrder": 1,
+      "canSplit": false,
+      "textHint": "上一题的D选项及强化训练练习3（题干、A、B选项）",
+      "pageRole": "exercise",
+      "keepFullPageWidth": true,
+      "groupHint": "q-remain-and-q3"
+    }
+  ]
+}

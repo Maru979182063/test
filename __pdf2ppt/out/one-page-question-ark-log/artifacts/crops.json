@@ -1,0 +1,78 @@
+{
+  "mode": "page-images",
+  "bboxFormat": "xywh_pixel_top_left",
+  "crops": [
+    {
+      "slideId": "s001",
+      "blockId": "block-1",
+      "pageNumber": 1,
+      "cropPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-log\\crops\\s001__block-1.png",
+      "bboxFormat": "xywh_pixel_top_left",
+      "pageSize": [
+        1158,
+        1638
+      ],
+      "widthPx": 1158,
+      "heightPx": 760,
+      "rawBbox": [
+        56,
+        116,
+        1068,
+        728
+      ],
+      "expandedBbox": [
+        40,
+        100,
+        1100,
+        760
+      ],
+      "finalCropBbox": [
+        0,
+        100,
+        1158,
+        760
+      ],
+      "cropSize": [
+        1158,
+        760
+      ],
+      "targetBoxEmu": null
+    },
+    {
+      "slideId": "s001",
+      "blockId": "blk-1",
+      "pageNumber": 1,
+      "cropPath": "C:\\Users\\EDY\\Documents\\杂项agent2\\__pdf2ppt\\out\\one-page-question-ark-log\\crops\\s001__blk-1.png",
+      "bboxFormat": "xywh_pixel_top_left",
+      "pageSize": [
+        1158,
+        1638
+      ],
+      "widthPx": 1158,
+      "heightPx": 380,
+      "rawBbox": [
+        56,
+        676,
+        1068,
+        348
+      ],
+      "expandedBbox": [
+        40,
+        660,
+        1100,
+        380
+      ],
+      "finalCropBbox": [
+        0,
+        660,
+        1158,
+        380
+      ],
+      "cropSize": [
+        1158,
+        380
+      ],
+      "targetBoxEmu": null
+    }
+  ]
+}
